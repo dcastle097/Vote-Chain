@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://prismlibrary.com"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:viewModels="clr-namespace:VotingSystem.Client.Components.Polls.List.ViewModels;assembly=VotingSystem.Client"
+             xmlns:responses="clr-namespace:VotingSystem.Domain.DTOs.Responses;assembly=VotingSystem.Domain"
+             x:Class="VotingSystem.Client.Components.Polls.List.Views.PollsListPage"
+             x:DataType="viewModels:PollsListViewModel"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <ListView ItemsSource="{Binding Polls}"
+                  HorizontalOptions="CenterAndExpand"
+                  HasUnevenRows="True"
+                  ios:ListView.SeparatorStyle="FullWidth">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid x:DataType="responses:PollResponseDto"
+                              Padding="20, 5"
+                              ColumnDefinitions="*, Auto">
+                            <StackLayout Grid.Column="0"
+                                         Orientation="Vertical">
+                                <Label Text="{Binding Title}"
+                                       FontSize="Large" />
+                                <Label FontSize="Small">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding StartDate, StringFormat='{0:yyyy/MM/dd HH:mm}'}" />
+                                            <Span Text=" - " />
+                                            <Span Text="{Binding EndDate, StringFormat='{0:yyyy/MM/dd HH:mm}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Behaviors>
+                <behaviors:EventToCommandBehavior EventName="ItemTapped"
+                                                  EventArgsParameterPath="Item"
+                                                  Command="{Binding PollSelectedCommand}" />
+            </ListView.Behaviors>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0.104" />
+        <PackageReference Include="MailKit" Version="2.9.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.9" />
+        <PackageReference Include="Nethereum.Web3" Version="3.8.0" />
+        <PackageReference Include="QRCoder" Version="1.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\VotingSystem.Contracts\VotingSystem.Contracts.csproj" />
+      <ProjectReference Include="..\VotingSystem.Domain\VotingSystem.Domain.csproj" />
+    </ItemGroup>
+</Project>

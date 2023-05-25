@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://prismlibrary.com"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:models="clr-namespace:VotingSystem.Client.Core.UI.Models;assembly=VotingSystem.Client"
+             xmlns:viewModels="clr-namespace:VotingSystem.Client.Components.Polls.Vote.ViewModels;assembly=VotingSystem.Client"
+             x:Class="VotingSystem.Client.Components.Polls.Vote.Views.PollsVotePage"
+             x:DataType="viewModels:PollsVoteViewModel"
+             x:Name="VotePage">
+    <ContentPage.Resources>
+        <ControlTemplate x:Key="RadioButtonTemplate">
+            <Grid ColumnDefinitions="Auto, *"
+                  Padding="20, 5">
+                <Grid WidthRequest="20"
+                      HeightRequest="20"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center">
+                    <Ellipse Stroke="{StaticResource BrushFocus}"
+                             Fill="Transparent"
+                             WidthRequest="18"
+                             HeightRequest="18"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+                    <Ellipse x:Name="check"
+                             Stroke="Transparent"
+                             StrokeThickness="0"
+                             Fill="{StaticResource BrushFocus}"
+                             WidthRequest="12"
+                             HeightRequest="12"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+                </Grid>
+                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CheckedState">
+                            <VisualState x:Name="Checked">
+                                <VisualState.Setters>
+                                    <Setter TargetName="check"
+                                            Property="Opacity"
+                                            Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Unchecked">
+                                <VisualState.Setters>
+                                    <Setter TargetName="check"
+                                            Property="Opacity"
+                                            Value="0" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Grid>
+        </ControlTemplate>
+        <Style TargetType="RadioButton">
+            <Setter Property="FontSize" Value="Medium" />
+            <Setter Property="TextColor" Value="{StaticResource ColorAction}" />
+            <Setter Property="ControlTemplate"
+                    Value="{StaticResource RadioButtonTemplate}" />
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding PollDetail.Title}"
+                   Style="{StaticResource TitleLabel}"
+                   VerticalOptions="Start"
+                   HorizontalOptions="CenterAndExpand" />
+            <Label Text="{Binding PollDetail.Statement}"
+                   Style="{StaticResource StatementLabel}"
+                   VerticalOptions="Start"
+                   HorizontalOptions="StartAndExpand" />
+            <ListView ItemsSource="{Binding Options}"
+                      BackgroundColor="{StaticResource ColorSecondaryShade}"
+                      VerticalOptions="StartAndExpand"
+                      HasUnevenRows="True"
+                      ios:ListView.SeparatorStyle="FullWidth">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ContentView x:DataType="models:SelectableItem">
+                                <RadioButton
+                                    Content="{Binding Value }"
+                                    IsChecked="{Binding IsSelected}"
+                                    GroupName="Options">
+                                    <RadioButton.Behaviors>
+                                        <behaviors:EventToCommandBehavior EventName="CheckedChanged"
+                                                                          EventArgsParameterPath="Item"
+                                                                          Command="{Binding Source={x:Reference VotePage}, Path=BindingBase.OptionSelectedCommand}" />
+                                    </RadioButton.Behaviors>
+                                </RadioButton>
+                            </ContentView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="Votar"
+                    Command="{Binding VotePollCommand}"
+                    VerticalOptions="End" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
+                        x:Class="VotingSystem.Client.App">
+    <Application.Resources>
+        <ResourceDictionary Source="Assets/Styles/Common.xaml" />
+        <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+            <Setter Property="BackgroundColor" Value="{StaticResource ColorSecondaryShade}" />
+        </Style>
+    </Application.Resources>
+</prism:PrismApplication>

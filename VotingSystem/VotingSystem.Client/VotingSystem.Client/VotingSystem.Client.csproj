@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Com.Airbnb.Xamarin.Forms.Lottie" Version="4.1.0" />
+        <PackageReference Include="Flurl.Http" Version="3.2.4" />
+        <PackageReference Include="Prism.Plugin.Popups" Version="8.0.76" />
+        <PackageReference Include="Prism.Unity.Forms" Version="8.1.97" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+        <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+        <PackageReference Include="Xamarin.Forms.Svg" Version="1.0.3" />
+        <PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
+        <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\VotingSystem.Common\VotingSystem.Domain\VotingSystem.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Components\Polls\Results" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\Animations\ErrorAnimation.json" />
+      <EmbeddedResource Include="Assets\Animations\ErrorAnimation.json" />
+      <None Remove="Assets\Animations\SuccessAnimation.json" />
+      <EmbeddedResource Include="Assets\Animations\SuccessAnimation.json" />
+      <None Remove="Assets\Animations\WarningAnimation.json" />
+      <EmbeddedResource Include="Assets\Animations\WarningAnimation.json" />
+      <None Remove="Assets\Images\Logo.svg" />
+      <EmbeddedResource Include="Assets\Images\Logo.svg" />
+      <None Remove="Assets\Fonts\Montserrat.ttf" />
+      <EmbeddedResource Include="Assets\Fonts\Montserrat.ttf" />
+      <None Remove="Assets\Fonts\Montserrat-Bold.ttf" />
+      <EmbeddedResource Include="Assets\Fonts\Montserrat-Bold.ttf" />
+      <None Remove="Assets\Fonts\Montserrat-Italic.ttf" />
+      <EmbeddedResource Include="Assets\Fonts\Montserrat-Italic.ttf" />
+    </ItemGroup>
+</Project>

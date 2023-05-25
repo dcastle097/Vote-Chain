@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:svg="clr-namespace:Xamarin.Forms.Svg;assembly=SvgImageSource"
+             xmlns:viewModels="clr-namespace:VotingSystem.Client.Components.MainPage.ViewModels;assembly=VotingSystem.Client"
+             x:Class="VotingSystem.Client.Components.MainPage.Views.MainPage"
+             x:DataType="viewModels:MainViewModel"
+             NavigationPage.HasNavigationBar="false"
+             ios:Page.UseSafeArea="true">
+    <StackLayout>
+        <Image Margin="0, 132,0,0">
+            <Image.Source>
+                <svg:SvgImageSource
+                    Source="VotingSystem.Client.Assets.Images.Logo.svg" />
+            </Image.Source>
+        </Image>
+        <Label Text="Bienvenido a VotingSystem"
+               HorizontalOptions="Center"
+               VerticalOptions="CenterAndExpand" />
+        <Button Text="Iniciar Sesión"
+                Command="{Binding GoToPollsCommand}" />
+        <Button Text="Completar Registro"
+                Command="{Binding GoToScannerCommand}" />
+    </StackLayout>
+</ContentPage>

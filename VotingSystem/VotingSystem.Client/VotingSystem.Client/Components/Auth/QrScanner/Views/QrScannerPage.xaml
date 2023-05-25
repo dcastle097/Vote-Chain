@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:viewModels="clr-namespace:VotingSystem.Client.Components.Auth.QrScanner.ViewModels;assembly=VotingSystem.Client"
+             x:Class="VotingSystem.Client.Components.Auth.QrScanner.Views.QrScannerPage"
+             x:DataType="viewModels:QrScannerViewModel"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <Grid x:Name="QrContainer">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <zxing:ZXingScannerView x:Name="ScannerView"
+                                    IsScanning="{Binding IsScanning}"
+                                    IsAnalyzing="{Binding IsAnalyzing}"
+                                    Result="{Binding Result, Mode=TwoWay}"
+                                    ScanResultCommand="{Binding QrScanResultCommand}"
+                                     />
+            <zxing:ZXingDefaultOverlay TopText="Apunta tu camara al código QR"
+                                       BottomText="El escaneo se completará automaticamente" ShowFlashButton="false"
+                                       Opacity="0.9" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

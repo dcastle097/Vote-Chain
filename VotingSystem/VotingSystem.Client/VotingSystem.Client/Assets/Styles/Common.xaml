@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <!-- Colors -->
+    <Color x:Key="ColorPrimary">#355C7D</Color>
+    <Color x:Key="ColorAction">#264259</Color>
+    <Color x:Key="ColorFocus">#5D90BA</Color>
+    <Color x:Key="ColorMuted">#4476A1</Color>
+    <Color x:Key="ColorSecondary">#FFFFFF</Color>
+    <Color x:Key="ColorSecondaryShade">#E6E6E6</Color>
+    <SolidColorBrush x:Key="BrushFocus">#5D90BA</SolidColorBrush>
+
+    <!-- Controls styles -->
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="Montserrat" />
+        <Setter Property="TextColor" Value="{StaticResource ColorPrimary}" />
+    </Style>
+    <Style TargetType="Label" x:Key="TitleLabel">
+        <Setter Property="FontFamily" Value="MontserratBold" />
+        <Setter Property="TextColor" Value="{StaticResource ColorAction}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="Title" />
+        <Setter Property="Margin" Value="0, 10, 0, 15" />
+    </Style>
+    <Style TargetType="Label" x:Key="StatementLabel">
+        <Setter Property="FontSize" Value="Body" />
+        <Setter Property="Margin" Value="20, 0, 20, 15" />
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="FontFamily" Value="MontserratBold" />
+        <Setter Property="TextColor" Value="{StaticResource ColorSecondary}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorAction}" />
+        <Setter Property="Margin" Value="50, 10, 50, 20" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+    </Style>
+    <Style TargetType="ListView">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSecondaryShade}" />
+    </Style>
+</ResourceDictionary>
