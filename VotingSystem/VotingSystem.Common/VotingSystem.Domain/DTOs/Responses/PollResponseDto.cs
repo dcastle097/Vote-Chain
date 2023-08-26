@@ -29,5 +29,8 @@ namespace VotingSystem.Domain.DTOs.Responses
 
         /// <summary>List of options to cast a vote to in the poll.</summary>
         public IEnumerable<OptionResponseDto> Options { get; set; }
+        
+        /// <summary>Results of the poll.</summary>
+        public ResultsResponseDto Results { get; set; }
     }
 }

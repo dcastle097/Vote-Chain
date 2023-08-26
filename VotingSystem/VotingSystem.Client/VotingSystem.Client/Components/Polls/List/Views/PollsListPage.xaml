@@ -11,9 +11,6 @@
              Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding CallsCounter}"
-                   TextColor="Teal"
-                   FontSize="30"/>
             <ListView ItemsSource="{Binding Polls}"
                       HorizontalOptions="CenterAndExpand"
                       HasUnevenRows="True"

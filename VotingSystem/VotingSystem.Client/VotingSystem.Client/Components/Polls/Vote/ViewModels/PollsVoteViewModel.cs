@@ -92,20 +92,24 @@ namespace VotingSystem.Client.Components.Polls.Vote.ViewModels
             
             byte.TryParse(selected.Id, out var option);
 
-            _pollsRepository.CastVoteAsync(PollDetail.Address, option, userId, userPass);
-            
-            await NavigationService.NavigateAsync(nameof(NotificationPopupPage),
-                new NavigationParameters
-                {
+            var voteWasSuccessful = await _pollsRepository.CastVoteAsync(PollDetail.Address, option, userId, userPass);
+
+            if (voteWasSuccessful)
+            {
+                await NavigationService.NavigateAsync(nameof(NotificationPopupPage),
+                    new NavigationParameters
                     {
-                        "details", new NotificationDetails
                         {
-                            Message = "Tu voto se ha registrado con éxito",
-                            Title = "¡Gracias!",
-                            Type = NotificationType.Success
+                            "details", new NotificationDetails
+                            {
+                                Message = "Tu voto se ha registrado con éxito",
+                                Title = "¡Gracias!",
+                                Type = NotificationType.Success
+                            }
                         }
-                    }
-                });
+                    });
+            }
+
             IsBusy = false;
         }
 

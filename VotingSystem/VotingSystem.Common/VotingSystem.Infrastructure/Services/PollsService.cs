@@ -101,7 +101,53 @@ namespace VotingSystem.Infrastructure.Services
                     return response;
                 
                 var results = await pollService.GetResultsQueryAsync();
-                Console.WriteLine();
+
+                response.Data.VoteCount = results.Results.ResultsByOption.Sum(r => (int)r.VotesCount);
+                response.Data.Results.VotesByOptions = results.Results.ResultsByOption.Select(o=> new OptionResponseDto
+                {
+                    Value = o.Option,
+                    VoteCount = (int)o.VotesCount
+                });
+                
+                var byDept = results.Results.ResultsByDepartment.Select(s=> new VotesBySectionResponseDto
+                {
+                    Type = SectionType.Department,
+                    Name = s.Section,
+                    Options = s.Options.Select(o=> new OptionResponseDto
+                    {
+                        Value = o.Option,
+                        VoteCount = (int)o.VotesCount
+                    })
+                });
+                
+                var byCity = results.Results.ResultsByCity.Select(s=> new VotesBySectionResponseDto
+                {
+                    Type = SectionType.City,
+                    Name = s.Section,
+                    Options = s.Options.Select(o=> new OptionResponseDto
+                    {
+                        Value = o.Option,
+                        VoteCount = (int)o.VotesCount
+                    })
+                });
+                
+                var byLocality = results.Results.ResultsByLocality.Select(s=> new VotesBySectionResponseDto
+                {
+                    Type = SectionType.Locality,
+                    Name = s.Section,
+                    Options = s.Options.Select(o=> new OptionResponseDto
+                    {
+                        Value = o.Option,
+                        VoteCount = (int)o.VotesCount
+                    })
+                });
+                
+                var resultsBySection = new List<VotesBySectionResponseDto>();
+                resultsBySection.AddRange(byDept);
+                resultsBySection.AddRange(byCity);
+                resultsBySection.AddRange(byLocality);
+                
+                response.Data.Results.VotesBySections = resultsBySection;
             }
             catch (RpcResponseException)
             {
