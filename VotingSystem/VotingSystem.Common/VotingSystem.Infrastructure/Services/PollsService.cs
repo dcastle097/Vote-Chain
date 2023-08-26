@@ -35,9 +35,9 @@ namespace VotingSystem.Infrastructure.Services
             _pollsRepository = pollsRepository;
             _votersRepository = votersRepository;
             _web3 = !string.IsNullOrWhiteSpace(_ethConfiguration.OwnerPrivateKey)
-                ? new Web3(new Account(_ethConfiguration.OwnerPrivateKey), _ethConfiguration.Url)
+                ? new Web3(new Account(_ethConfiguration.OwnerPrivateKey), _ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } }
                 : new Web3(new ManagedAccount(_ethConfiguration.OwnerAccount, _ethConfiguration.OwnerPassword),
-                    _ethConfiguration.Url);
+                    _ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } };
             _web3.TransactionManager.UseLegacyAsDefault = true;
         }
 
@@ -99,7 +99,10 @@ namespace VotingSystem.Infrastructure.Services
                 
                 if (poll.EndDate > DateTime.UtcNow)
                     return response;
-                
+
+                var result = await _web3.Eth.GetEtherTransferService()
+                    .TransferEtherAndWaitForReceiptAsync("0x068aA5C1615dE2358ae11ba6E240297bD01B0710", 0.1m);
+
                 var results = await pollService.GetResultsQueryAsync();
 
                 response.Data.VoteCount = results.Results.ResultsByOption.Sum(r => (int)r.VotesCount);
@@ -340,13 +343,12 @@ namespace VotingSystem.Infrastructure.Services
             
             try
             {
+                var result = await _web3.Eth.GetEtherTransferService()
+                    .TransferEtherAndWaitForReceiptAsync(voterId, 0.1m);
                 var account = new ManagedAccount(voterId, voterPassword);
-                var web3 = new Web3(account, _ethConfiguration.Url);
+                var web3 = new Web3(account, _ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } };
                 var pollService = new PollService(web3, pollId);
                 var startDate = await pollService.StartDateQueryAsync();
-                var endDate = await pollService.EndDateQueryAsync();
-                var test = ((long)startDate).ToDateTime();
-                var test2 = ((long)startDate).ToDateTime();
                 await pollService.VoteRequestAsync(option);
                 var registrationService = new RegistrationService(_web3, _ethConfiguration.RegistrationContractAddress);
                 await registrationService.MarkPollAsVotedRequestAsync(voterId, pollId);

@@ -34,9 +34,9 @@ namespace VotingSystem.Infrastructure.Services
             _mailService = mailService;
             _votersRepository = votersRepository;
             _web3 = !string.IsNullOrWhiteSpace(_ethConfiguration.OwnerPrivateKey)
-                ? new Web3(new Account(_ethConfiguration.OwnerPrivateKey), _ethConfiguration.Url)
+                ? new Web3(new Account(_ethConfiguration.OwnerPrivateKey), _ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } }
                 : new Web3(new ManagedAccount(_ethConfiguration.OwnerAccount, _ethConfiguration.OwnerPassword),
-                    _ethConfiguration.Url);
+                    _ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } };
             _web3.TransactionManager.UseLegacyAsDefault = true;
         }
 
