@@ -20,8 +20,9 @@ namespace VotingSystem.Infrastructure.Repositories
 
         public VotersRepository(IOptions<AmazonWebServicesConfiguration> configuration)
         {
-            var basicAwsCredentials = new BasicAWSCredentials(configuration.Value.DynamoDb.AccessKey, configuration.Value.DynamoDb.SecretKey);
-            var amazonDynamoDbConfig = new AmazonDynamoDBConfig {RegionEndpoint = RegionEndpoint.USEast2};
+            var basicAwsCredentials = new BasicAWSCredentials(configuration.Value.DynamoDb.AccessKey,
+                configuration.Value.DynamoDb.SecretKey);
+            var amazonDynamoDbConfig = new AmazonDynamoDBConfig { RegionEndpoint = RegionEndpoint.USEast2 };
             var amazonDynamoDbClient = new AmazonDynamoDBClient(basicAwsCredentials, amazonDynamoDbConfig);
 
             _context = new DynamoDBContext(amazonDynamoDbClient);
@@ -33,14 +34,11 @@ namespace VotingSystem.Infrastructure.Repositories
             try
             {
                 var table = _context.GetTargetTable<Voter>();
-                var config = new ScanOperationConfig {Filter = new ScanFilter()};
-                if (!includeInactive)
-                {
-                    config.Filter.AddCondition("IsActive", ScanOperator.Equal, 1);
-                }
+                var config = new ScanOperationConfig { Filter = new ScanFilter() };
+                if (!includeInactive) config.Filter.AddCondition("IsActive", ScanOperator.Equal, 1);
                 var results = table.Scan(config);
                 var data = await results.GetNextSetAsync();
-                
+
                 return data.Select(d => new Voter
                 {
                     IsActive = d["IsActive"].AsInt() == 1,

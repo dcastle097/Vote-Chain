@@ -16,9 +16,9 @@ namespace VotingSystem.Domain.Extensions
         /// <returns>An <see cref="Int64" /> unix timestamp</returns>
         public static long ToUnixTimestamp(this DateTime value)
         {
-            return (long) value.ToUniversalTime().Subtract(Epoc).TotalMilliseconds;
+            return (long)value.ToUniversalTime().Subtract(Epoc).TotalMilliseconds;
         }
-        
+
         /// <summary>
         ///     Convert an <see cref="Int64" /> value to a universal time <see cref="DateTime" />.
         /// </summary>

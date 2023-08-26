@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\VotingSystem.Common\VotingSystem.Contracts\VotingSystem.Contracts.csproj" />
+        <ProjectReference Include="..\..\VotingSystem.Common\VotingSystem.Domain\VotingSystem.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

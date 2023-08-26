@@ -1,7 +1,7 @@
 namespace VotingSystem.Domain.DTOs.Requests
 {
     /// <summary>Voter completion entity</summary>
-    public class VoterSetPasswordRequestDto
+    public class VoterActivationRequestDto
     {
         /// <summary>Epoch timestamp for when the user was created in the system.</summary>
         public long Created { get; set; }

@@ -7,7 +7,8 @@
                  xmlns:popup="http://rotorgames.com"
                  xmlns:viewModels="clr-namespace:VotingSystem.Client.Components.NotificationPopup.ViewModels;assembly=VotingSystem.Client"
                  x:Class="VotingSystem.Client.Components.NotificationPopup.Views.NotificationPopupPage"
-                 x:DataType="viewModels:NotificationPopupViewModel">
+                 x:DataType="viewModels:NotificationPopupViewModel"
+                 BackgroundColor="{StaticResource ColorPrimary80}">
     <popup:PopupPage.Resources>
         <converters:NotificationTypeToAnimationConverter x:Key="NotificationTypeToAnimationConverter" />
     </popup:PopupPage.Resources>
@@ -17,26 +18,27 @@
                VerticalOptions="Center"
                HasShadow="True"
                IsClippedToBounds="True"
-               Padding="20">
+               Padding="20"
+               Margin="20">
+            <StackLayout>
+                <lottie:AnimationView AnimationSource="EmbeddedResource"
+                                      WidthRequest="100"
+                                      HeightRequest="100"
+                                      Animation="{Binding Details.Type, Converter={StaticResource NotificationTypeToAnimationConverter}}"
+                                      VerticalOptions="FillAndExpand"
+                                      HorizontalOptions="FillAndExpand" />
                 <StackLayout>
-                    <lottie:AnimationView AnimationSource="EmbeddedResource"
-                                          WidthRequest="100"
-                                          HeightRequest="100"
-                                          Animation="{Binding Details.Type, Converter={StaticResource NotificationTypeToAnimationConverter}}"
-                                          VerticalOptions="FillAndExpand"
-                                          HorizontalOptions="FillAndExpand" />
-                    <StackLayout>
-                        <Label Text="{Binding Details.Title}"
-                               FontSize="Medium"
-                               FontFamily="MontserratBold"
-                               VerticalOptions="StartAndExpand"
-                               HorizontalOptions="CenterAndExpand" />
-                        <Label Text="{Binding Details.Message}"
-                               VerticalOptions="StartAndExpand"
-                               HorizontalOptions="CenterAndExpand"
-                               FontSize="Small" />
-                    </StackLayout>
+                    <Label Text="{Binding Details.Title}"
+                           FontSize="Medium"
+                           FontFamily="MontserratBold"
+                           VerticalOptions="StartAndExpand"
+                           HorizontalOptions="CenterAndExpand" />
+                    <Label Text="{Binding Details.Message}"
+                           VerticalOptions="StartAndExpand"
+                           HorizontalOptions="CenterAndExpand"
+                           FontSize="Small" />
                 </StackLayout>
+            </StackLayout>
         </Frame>
     </popup:PopupPage.Content>
 </popup:PopupPage>

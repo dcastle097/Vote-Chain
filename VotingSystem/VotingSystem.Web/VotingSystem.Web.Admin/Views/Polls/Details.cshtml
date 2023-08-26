@@ -1,14 +1,23 @@
 @model PollResponseDto
 
 <div class="row justify-content-center">
+    @if(!string.IsNullOrWhiteSpace(TempData["Message"] as string))
+    {
+        <div class="alert alert-@TempData["MessageType"] alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
     <div class="col-md-6">
         <h2>@Model.Title</h2>
         <p>@Model.Statement</p>
         <p>
-            <b>Fecha inicio:</b> @Model.StartDate
+            <b>Fecha inicio:</b> @TimeZoneInfo.ConvertTime(Model.StartDate, TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time")).ToString("MM/dd/yyyy hh:mm tt")
         </p>
         <p>
-            <b>Fecha Fin:</b> @Model.EndDate
+            <b>Fecha Fin:</b> @TimeZoneInfo.ConvertTime(Model.EndDate, TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time")).ToString("MM/dd/yyyy hh:mm tt")
         </p>
         <p>
             <b>Opciones: </b>
@@ -19,31 +28,44 @@
                 <li>@option.Value</li>
             }
         </ul>
-        <form asp-action="GiveRightToVote" asp-route-id="@Model.Address">
-            <h3>Habilitar para votación</h3>
-            <input type="text" id="voter" placeholder="Email del votante" class="form-control"/>
-            <input id="voter-id" type="hidden" name="VoterGiveRightsToVoteDto.VoterId">
-            <button type="submit">Prueba</button>
-        </form>
+        @if (DateTime.UtcNow < Model.StartDate)
+        {
+            <form asp-action="GiveRightToVote" asp-route-id="@Model.Address">
+                <h3>Habilitar para votación</h3>
+                <div class="form-group">
+                    <input type="text" id="voter" placeholder="Email del votante" class="form-control"/>
+                    <input id="voter-id" type="hidden" name="VoterGiveRightsToVoteDto.VoterId">
+                    <input id="voter-email" type="hidden" name="VoterGiveRightsToVoteDto.Email">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Habilitar" class="btn btn-primary"/>
+                </div>
+            </form>
+        }
     </div>
 </div>
 
-@section Scripts
+@if (DateTime.UtcNow < Model.StartDate)
 {
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-4-autocomplete/dist/bootstrap-4-autocomplete.min.js" crossorigin="anonymous"></script>
+    @section Scripts
+    {
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-4-autocomplete/dist/bootstrap-4-autocomplete.min.js" crossorigin="anonymous"></script>
 
-    <script type="text/javascript">
-        $("#voter").autocomplete({
-            source: @Html.Raw(Json.Serialize(ViewData["Voters"])),
-            highlightClass: 'text-danger',
-            treshold: 2,
-            label: 'email',
-            value: 'id',
-            onSelectItem: onSelectItem
-        });
-        function onSelectItem(item, element) {
-            $('#voter-id').val(item.value);
-        }
-    </script>
+        <script type="text/javascript">
+            $("#voter").autocomplete({
+                source: @Html.Raw(Json.Serialize(ViewData["Voters"])),
+                highlightClass: 'text-danger',
+                treshold: 2,
+                label: 'email',
+                value: 'id',
+                onSelectItem: onSelectItem
+            });
+            
+            function onSelectItem(item, element) {
+                $('#voter-id').val(item.value);
+                $('#voter-email').val(item.label);
+            }
+        </script>
+    }
 }

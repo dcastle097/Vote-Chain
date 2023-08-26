@@ -10,39 +10,44 @@
              x:DataType="viewModels:PollsListViewModel"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <ListView ItemsSource="{Binding Polls}"
-                  HorizontalOptions="CenterAndExpand"
-                  HasUnevenRows="True"
-                  ios:ListView.SeparatorStyle="FullWidth">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid x:DataType="responses:PollResponseDto"
-                              Padding="20, 5"
-                              ColumnDefinitions="*, Auto">
-                            <StackLayout Grid.Column="0"
-                                         Orientation="Vertical">
-                                <Label Text="{Binding Title}"
-                                       FontSize="Large" />
-                                <Label FontSize="Small">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{Binding StartDate, StringFormat='{0:yyyy/MM/dd HH:mm}'}" />
-                                            <Span Text=" - " />
-                                            <Span Text="{Binding EndDate, StringFormat='{0:yyyy/MM/dd HH:mm}'}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                            </StackLayout>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListView.Behaviors>
-                <behaviors:EventToCommandBehavior EventName="ItemTapped"
-                                                  EventArgsParameterPath="Item"
-                                                  Command="{Binding PollSelectedCommand}" />
-            </ListView.Behaviors>
-        </ListView>
+        <StackLayout>
+            <Label Text="{Binding CallsCounter}"
+                   TextColor="Teal"
+                   FontSize="30"/>
+            <ListView ItemsSource="{Binding Polls}"
+                      HorizontalOptions="CenterAndExpand"
+                      HasUnevenRows="True"
+                      ios:ListView.SeparatorStyle="FullWidth">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid x:DataType="responses:PollResponseDto"
+                                  Padding="20, 5"
+                                  ColumnDefinitions="*, Auto">
+                                <StackLayout Grid.Column="0"
+                                             Orientation="Vertical">
+                                    <Label Text="{Binding Title}"
+                                           FontSize="Large" />
+                                    <Label FontSize="Small">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding StartDate, StringFormat='{0:yyyy/MM/dd HH:mm}'}" />
+                                                <Span Text=" - " />
+                                                <Span Text="{Binding EndDate, StringFormat='{0:yyyy/MM/dd HH:mm}'}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="ItemTapped"
+                                                      EventArgsParameterPath="Item"
+                                                      Command="{Binding PollSelectedCommand}" />
+                </ListView.Behaviors>
+            </ListView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

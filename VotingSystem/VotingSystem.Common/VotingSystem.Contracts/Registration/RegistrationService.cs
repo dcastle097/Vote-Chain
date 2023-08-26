@@ -32,11 +32,17 @@ namespace VotingSystem.Contracts.Registration
             return new RegistrationService(web3, receipt.ContractAddress);
         }
 
-        protected Nethereum.Web3.Web3 Web3{ get; }
+        protected Nethereum.Web3.IWeb3 Web3{ get; }
 
         public ContractHandler ContractHandler { get; }
 
         public RegistrationService(Nethereum.Web3.Web3 web3, string contractAddress)
+        {
+            Web3 = web3;
+            ContractHandler = web3.Eth.GetContractHandler(contractAddress);
+        }
+
+        public RegistrationService(Nethereum.Web3.IWeb3 web3, string contractAddress)
         {
             Web3 = web3;
             ContractHandler = web3.Eth.GetContractHandler(contractAddress);

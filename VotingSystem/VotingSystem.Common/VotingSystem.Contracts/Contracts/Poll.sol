@@ -27,6 +27,7 @@ contract Poll {
 
     struct Results {
         string winnerOption;
+        Option[] resultsByOption;
         SectionResults[] resultsByDepartment;
         SectionResults[] resultsByLocality;
         SectionResults[] resultsByCity;
@@ -71,7 +72,7 @@ contract Poll {
         title = _title;
         statement = _statement;
         for (uint256 i = 0; i < _options.length; i++) {
-            options.push(Option({option: _options[i], votesCount: 0}));
+            options.push(Option({option : _options[i], votesCount : 0}));
         }
     }
 
@@ -105,8 +106,9 @@ contract Poll {
      * @param option index of the option
      */
     function vote(uint8 option) public {
-        require(getTimestamp() > startDate, "Voting hasn't started yet");
-        require(getTimestamp() < endDate, "Voting has ended");
+        uint256 timestamp = getTimestamp();
+        require(timestamp > startDate, string(abi.encodePacked("Voting hasn't started yet. Timestamp: ", uintToStr(timestamp))));
+        require(timestamp < endDate, string(abi.encodePacked("Voting has ended. Timestamp: ", uintToStr(timestamp))));
         require(
             option > 0 && option < options.length,
             "The option isn't valid"
@@ -168,54 +170,55 @@ contract Poll {
         }
 
         _results.winnerOption = options[winnerProposal].option;
+        _results.resultsByOption = options;
 
         SectionResults[] memory _votesByDepartment =
-            new SectionResults[](departments.length);
+        new SectionResults[](departments.length);
         for (uint256 i = 0; i < departments.length; i++) {
             Option[] memory _options = new Option[](options.length);
             for (uint256 j = 0; j < options.length; j++) {
                 _options[j] = Option({
-                    option: options[j].option,
-                    votesCount: votesByDepartment[departments[i]][j]
+                option : options[j].option,
+                votesCount : votesByDepartment[departments[i]][j]
                 });
             }
             _votesByDepartment[i] = SectionResults({
-                section: departments[i],
-                options: _options
+            section : departments[i],
+            options : _options
             });
         }
         _results.resultsByDepartment = _votesByDepartment;
 
         SectionResults[] memory _votesByCity =
-            new SectionResults[](cities.length);
+        new SectionResults[](cities.length);
         for (uint256 i = 0; i < cities.length; i++) {
             Option[] memory _options = new Option[](options.length);
             for (uint256 j = 0; j < options.length; j++) {
                 _options[j] = Option({
-                    option: options[j].option,
-                    votesCount: votesByCity[cities[i]][j]
+                option : options[j].option,
+                votesCount : votesByCity[cities[i]][j]
                 });
             }
             _votesByCity[i] = SectionResults({
-                section: cities[i],
-                options: _options
+            section : cities[i],
+            options : _options
             });
         }
         _results.resultsByCity = _votesByCity;
 
         SectionResults[] memory _votesByLocality =
-            new SectionResults[](localities.length);
+        new SectionResults[](localities.length);
         for (uint256 i = 0; i < localities.length; i++) {
             Option[] memory _options = new Option[](options.length);
             for (uint256 j = 0; j < options.length; j++) {
                 _options[j] = Option({
-                    option: options[j].option,
-                    votesCount: votesByLocality[localities[i]][j]
+                option : options[j].option,
+                votesCount : votesByLocality[localities[i]][j]
                 });
             }
             _votesByCity[i] = SectionResults({
-                section: localities[i],
-                options: _options
+            section : localities[i],
+            options : _options
             });
         }
         _results.resultsByLocality = _votesByLocality;
@@ -226,5 +229,25 @@ contract Poll {
      */
     function getTimestamp() private view returns (uint256) {
         return block.timestamp * 1000;
+    }
+
+    function uintToStr(uint _i) internal pure returns (string memory _uintAsString) {
+        uint number = _i;
+        if (number == 0) {
+            return "0";
+        }
+        uint j = number;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint k = len - 1;
+        while (number != 0) {
+            bstr[k--] = byte(uint8(48 + number % 10));
+            number /= 10;
+        }
+        return string(bstr);
     }
 }

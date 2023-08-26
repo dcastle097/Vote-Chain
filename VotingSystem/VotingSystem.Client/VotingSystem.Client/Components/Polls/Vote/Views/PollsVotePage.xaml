@@ -76,7 +76,8 @@
                       BackgroundColor="{StaticResource ColorSecondaryShade}"
                       VerticalOptions="StartAndExpand"
                       HasUnevenRows="True"
-                      ios:ListView.SeparatorStyle="FullWidth">
+                      ios:ListView.SeparatorStyle="FullWidth"
+                      IsVisible="{Binding IsActive}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -96,9 +97,30 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <ListView ItemsSource="{Binding Options}"
+                      BackgroundColor="{StaticResource ColorSecondaryShade}"
+                      VerticalOptions="StartAndExpand"
+                      HasUnevenRows="True"
+                      ios:ListView.SeparatorStyle="FullWidth"
+                      IsVisible="{Binding IsPending}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ContentView x:DataType="models:SelectableItem">
+                                <Label
+                                    Text="{Binding Value}"
+                                    Padding="20, 5"
+                                    FontSize="Medium"
+                                    TextColor="{StaticResource ColorAction}"/>
+                            </ContentView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
             <Button Text="Votar"
                     Command="{Binding VotePollCommand}"
-                    VerticalOptions="End" />
+                    VerticalOptions="End"
+                    IsVisible="{Binding IsActive}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

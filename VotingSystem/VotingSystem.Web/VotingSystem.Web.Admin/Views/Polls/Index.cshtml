@@ -28,6 +28,7 @@
                 <th>
                     @Html.DisplayNameForInnerType((PollResponseDto p) => p.EndDate)
                 </th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
             </thead>
@@ -41,10 +42,24 @@
                             @Html.DisplayFor(modelItem => poll.Title)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => poll.StartDate)
+                            @TimeZoneInfo.ConvertTime(poll.StartDate, TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time")).ToString("MM/dd/yyyy hh:mm tt")
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => poll.EndDate)
+                            @TimeZoneInfo.ConvertTime(poll.EndDate, TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time")).ToString("MM/dd/yyyy hh:mm tt")
+                        </td>
+                        <td>
+                            @if (poll.StartDate > DateTime.UtcNow)
+                            {
+                                <span class="badge badge-warning">Pendiente</span>
+                            }
+                            else if(poll.EndDate < DateTime.UtcNow)
+                            {
+                                <span class="badge badge-danger">Finalizada</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">En progreso</span>
+                            }
                         </td>
                         <td>
                             <a asp-action="Details" asp-route-id="@poll.Address">
@@ -56,6 +71,12 @@
                         </td>
                     </tr>
                 }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No hay votaciones registradas</td>
+                </tr>
             }
             </tbody>
         </table>

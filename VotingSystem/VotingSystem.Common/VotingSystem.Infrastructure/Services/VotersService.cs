@@ -37,10 +37,11 @@ namespace VotingSystem.Infrastructure.Services
                 ? new Web3(new Account(_ethConfiguration.OwnerPrivateKey), _ethConfiguration.Url)
                 : new Web3(new ManagedAccount(_ethConfiguration.OwnerAccount, _ethConfiguration.OwnerPassword),
                     _ethConfiguration.Url);
+            _web3.TransactionManager.UseLegacyAsDefault = true;
         }
 
         /// <inheritdoc />
-        public async Task<GenericResponseDto<IEnumerable<VoterResponseDto>>> GetAsync(bool includeInactive = true)
+        public async Task<GenericResponseDto<IEnumerable<VoterResponseDto>>> GetAllAsync(bool includeInactive = true)
         {
             var response = new GenericResponseDto<IEnumerable<VoterResponseDto>>();
 
@@ -117,7 +118,6 @@ namespace VotingSystem.Infrastructure.Services
                 Name = voter.Name,
                 Table = $"{voter.Table}"
             };
-            var test = newVoter.Created.ToUnixTimestamp();
 
             try
             {
@@ -150,7 +150,7 @@ namespace VotingSystem.Infrastructure.Services
 
         /// <inheritdoc />
         public async Task<GenericResponseDto<VoterResponseDto>> ConfirmRegistrationAsync(string id,
-            VoterSetPasswordRequestDto voter)
+            VoterActivationRequestDto voter)
         {
             var response = await GetByIdAsync(id);
 
@@ -164,7 +164,8 @@ namespace VotingSystem.Infrastructure.Services
                 return response;
             }
 
-            var web3 = new Web3(_ethConfiguration.Url);
+            var web3 = new Web3(_ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } };
+            await _web3.Eth.Accounts.SendRequestAsync();
             var newAccount = await web3.Personal.NewAccount.SendRequestAsync(voter.Password);
             await _web3.Eth.GetEtherTransferService()
                 .TransferEtherAndWaitForReceiptAsync(newAccount, _ethConfiguration.MinEthBalance);
@@ -201,13 +202,14 @@ namespace VotingSystem.Infrastructure.Services
         }
 
         /// <inheritdoc />
-        public async Task<GenericResponseDto<bool>> CheckCredentialsAsync(string id, string password)
+        public async Task<GenericResponseDto<bool>> CheckCredentialsAsync(string id,
+            VoterLoginRequestDto voterLoginRequestDto)
         {
             var response = new GenericResponseDto<bool>();
             try
             {
-                var web3 = new Web3(_ethConfiguration.Url);
-                await web3.Personal.UnlockAccount.SendRequestAsync(id, password, 1);
+                var web3 = new Web3(_ethConfiguration.Url) { TransactionManager = { UseLegacyAsDefault = true } };
+                await web3.Personal.UnlockAccount.SendRequestAsync(id, voterLoginRequestDto.Password, 1);
                 response.Data = true;
                 response.ResponseCode = ResponseCode.Ok;
                 response.Message = "Credentials are valid";

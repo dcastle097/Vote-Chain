@@ -9,11 +9,6 @@ namespace VotingSystem.Client.Components.Auth.QrScanner.Views
         public QrScannerPage()
         {
             InitializeComponent();
-            
-            QrContainer.SizeChanged += (sender, args) =>
-            {
-                //ScannerView.HeightRequest = QrContainer.Width;
-            };
         }
     }
 }

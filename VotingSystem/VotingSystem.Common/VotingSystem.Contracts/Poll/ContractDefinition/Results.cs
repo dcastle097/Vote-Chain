@@ -13,11 +13,13 @@ namespace VotingSystem.Contracts.Poll.ContractDefinition
     {
         [Parameter("string", "winnerOption", 1)]
         public virtual string WinnerOption { get; set; }
-        [Parameter("tuple[]", "resultsByDepartment", 2)]
+        [Parameter("tuple[]", "resultsByOption", 2)]
+        public virtual List<Option> ResultsByOption { get; set; }
+        [Parameter("tuple[]", "resultsByDepartment", 3)]
         public virtual List<SectionResults> ResultsByDepartment { get; set; }
-        [Parameter("tuple[]", "resultsByLocality", 3)]
+        [Parameter("tuple[]", "resultsByLocality", 4)]
         public virtual List<SectionResults> ResultsByLocality { get; set; }
-        [Parameter("tuple[]", "resultsByCity", 4)]
+        [Parameter("tuple[]", "resultsByCity", 5)]
         public virtual List<SectionResults> ResultsByCity { get; set; }
     }
 }

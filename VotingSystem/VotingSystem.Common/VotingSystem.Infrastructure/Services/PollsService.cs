@@ -28,7 +28,8 @@ namespace VotingSystem.Infrastructure.Services
         private readonly IVotersRepository _votersRepository;
         private readonly Web3 _web3;
 
-        public PollsService(IOptions<EthConfiguration> ethConfiguration, IPollsRepository pollsRepository, IVotersRepository votersRepository)
+        public PollsService(IOptions<EthConfiguration> ethConfiguration, IPollsRepository pollsRepository,
+            IVotersRepository votersRepository)
         {
             _ethConfiguration = ethConfiguration.Value;
             _pollsRepository = pollsRepository;
@@ -37,15 +38,16 @@ namespace VotingSystem.Infrastructure.Services
                 ? new Web3(new Account(_ethConfiguration.OwnerPrivateKey), _ethConfiguration.Url)
                 : new Web3(new ManagedAccount(_ethConfiguration.OwnerAccount, _ethConfiguration.OwnerPassword),
                     _ethConfiguration.Url);
+            _web3.TransactionManager.UseLegacyAsDefault = true;
         }
 
         /// <inheritdoc />
-        public async Task<GenericResponseDto<IEnumerable<PollResponseDto>>> GetAsync()
+        public async Task<GenericResponseDto<IEnumerable<PollResponseDto>>> GetAllAsync()
         {
             var response = new GenericResponseDto<IEnumerable<PollResponseDto>>();
 
             var polls = await _pollsRepository.GetAsync();
-            
+
             if (polls == null || !polls.Any())
             {
                 response.ResponseCode = ResponseCode.NotFound;
@@ -57,12 +59,12 @@ namespace VotingSystem.Infrastructure.Services
             {
                 Address = p.Id,
                 Title = p.Title,
-                Options = p.Options.Select((o, i) => new OptionResponseDto {Value = o, Index = i}),
+                Options = p.Options.Select((o, i) => new OptionResponseDto { Value = o, Index = i }),
                 Statement = p.Statement,
                 EndDate = p.EndDate,
                 StartDate = p.StartDate
             });
-            
+
             return response;
         }
 
@@ -86,7 +88,7 @@ namespace VotingSystem.Infrastructure.Services
                 {
                     Address = poll.Id,
                     Title = poll.Title,
-                    Options = poll.Options.Select((o, i) => new OptionResponseDto {Value = o, Index = i}),
+                    Options = poll.Options.Select((o, i) => new OptionResponseDto { Value = o, Index = i }),
                     Statement = poll.Statement,
                     EndDate = poll.EndDate,
                     StartDate = poll.StartDate
@@ -94,11 +96,15 @@ namespace VotingSystem.Infrastructure.Services
                 response.ResponseCode = ResponseCode.Ok;
 
                 var pollService = new PollService(_web3, id);
+                
+                if (poll.EndDate > DateTime.UtcNow)
+                    return response;
+                
                 var results = await pollService.GetResultsQueryAsync();
+                Console.WriteLine();
             }
             catch (RpcResponseException)
             {
-                
             }
             catch (Exception)
             {
@@ -116,14 +122,14 @@ namespace VotingSystem.Infrastructure.Services
             try
             {
                 var registrationService = new RegistrationService(_web3, _ethConfiguration.RegistrationContractAddress);
-                var polls = await registrationService.GetVoterPollsQueryAsync(voterId);
+                var voterPolls = await registrationService.GetVoterPollsQueryAsync(voterId);
 
-                var data = polls.ReturnValue1.Select(p => new PollResponseDto {Address = p.Id, Title = p.Name})
-                    .ToList();
+                var pollsAddresses = voterPolls.ReturnValue1.Select(p => p.Id.ToLowerInvariant()).ToList();
 
-                if (data.Any())
+                if (pollsAddresses.Any())
                 {
-                    response.Data = data;
+                    var polls = await _pollsRepository.GetAsync();
+                    response.Data = polls.Where(p => pollsAddresses.Contains(p.Id.ToLowerInvariant())).Select(p => new PollResponseDto { Address = p.Id, Title = p.Title, StartDate = p.StartDate, EndDate = p.EndDate });
                     response.ResponseCode = ResponseCode.Ok;
                 }
                 else
@@ -152,8 +158,8 @@ namespace VotingSystem.Infrastructure.Services
                     Options = poll.Options,
                     Statement = poll.Statement,
                     Title = poll.Title,
-                    EndDate = poll.EndDate.ToUnixTimestamp(),
-                    StartDate = poll.StartDate.ToUnixTimestamp()
+                    EndDate = poll.EndDate.ToUniversalTime().ToUnixTimestamp(),
+                    StartDate = poll.StartDate.ToUniversalTime().ToUnixTimestamp()
                 };
                 var blockPoll = await PollService.DeployContractAndGetServiceAsync(_web3, pollDeployment);
                 var registrationService = new RegistrationService(_web3, _ethConfiguration.RegistrationContractAddress);
@@ -171,12 +177,12 @@ namespace VotingSystem.Infrastructure.Services
                 };
 
                 await _pollsRepository.AddAsync(newPoll);
-                
+
                 response.Data = new PollResponseDto
                 {
                     Address = newPoll.Id,
                     Title = newPoll.Title,
-                    Options = newPoll.Options.Select((o, i) => new OptionResponseDto {Value = o, Index = i}),
+                    Options = newPoll.Options.Select((o, i) => new OptionResponseDto { Value = o, Index = i }),
                     Statement = newPoll.Statement,
                     EndDate = newPoll.EndDate,
                     StartDate = newPoll.StartDate
@@ -230,11 +236,9 @@ namespace VotingSystem.Infrastructure.Services
             try
             {
                 var pollService = new PollService(_web3, pollId);
-                var voteRequestAsync =
-                    await pollService.GiveRightToVoteRequestAsync(voter.Id, voter.Department, voter.City,
-                        voter.Locality);
+                await pollService.GiveRightToVoteRequestAsync(voter.Id, voter.Department, voter.City, voter.Locality);
                 var registrationService = new RegistrationService(_web3, _ethConfiguration.RegistrationContractAddress);
-                var voterRequestAsync = await registrationService.AddPollToVoterRequestAsync(voter.Id, pollId);
+                await registrationService.AddPollToVoterRequestAsync(voter.Id, pollId);
 
                 poll.Voters ??= new List<string>();
 
@@ -245,11 +249,70 @@ namespace VotingSystem.Infrastructure.Services
             }
             catch (Exception)
             {
-                // ignored
+                response.ResponseCode = ResponseCode.BadRequest;
+                response.Message = "Something went wrong";
             }
 
-            response.ResponseCode = ResponseCode.BadRequest;
-            response.Message = "Something went wrong";
+            return response;
+        }
+
+        /// <inheritdoc />
+        public async Task<GenericResponseDto<bool>> CastVoteAsync(string pollId, byte option, string voterId, string voterPassword)
+        {
+            var response = new GenericResponseDto<bool>();
+            if (string.IsNullOrWhiteSpace(pollId))
+            {
+                response.ResponseCode = ResponseCode.BadRequest;
+                response.Message = "The poll id is required";
+                return response;
+            }
+
+            if (string.IsNullOrWhiteSpace(voterId))
+            {
+                response.ResponseCode = ResponseCode.NotFound;
+                response.Message = "The voter id is required";
+                return response;
+            }
+
+            var poll = await _pollsRepository.GetByIdAsync(pollId);
+
+            if (poll == null)
+            {
+                response.ResponseCode = ResponseCode.NotFound;
+                response.Message = "Poll not found";
+                return response;
+            }
+
+            var voter = await _votersRepository.GetByIdAsync(voterId);
+
+            if (voter == null)
+            {
+                response.ResponseCode = ResponseCode.NotFound;
+                response.Message = "Voter not found";
+                return response;
+            }
+            
+            try
+            {
+                var account = new ManagedAccount(voterId, voterPassword);
+                var web3 = new Web3(account, _ethConfiguration.Url);
+                var pollService = new PollService(web3, pollId);
+                var startDate = await pollService.StartDateQueryAsync();
+                var endDate = await pollService.EndDateQueryAsync();
+                var test = ((long)startDate).ToDateTime();
+                var test2 = ((long)startDate).ToDateTime();
+                await pollService.VoteRequestAsync(option);
+                var registrationService = new RegistrationService(_web3, _ethConfiguration.RegistrationContractAddress);
+                await registrationService.MarkPollAsVotedRequestAsync(voterId, pollId);
+
+                response.Data = true;
+                response.ResponseCode = ResponseCode.Ok;
+            }
+            catch (Exception e)
+            {
+                response.ResponseCode = ResponseCode.BadRequest;
+                response.Message = "Something went wrong";
+            }
 
             return response;
         }

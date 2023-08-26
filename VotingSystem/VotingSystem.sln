@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingSystem.Web.VoterApi",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingSystem.Contracts", "VotingSystem.Common\VotingSystem.Contracts\VotingSystem.Contracts.csproj", "{511E3E33-1B1C-4D3F-9187-1A777D9CBBE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingSystem.InitialConfiguration", "VotingSystem.InitialConfiguration\VotingSystem.InitialConfiguration\VotingSystem.InitialConfiguration.csproj", "{B01A415A-997F-42B3-883A-994A4468B605}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,5 +130,17 @@ Global
 		{511E3E33-1B1C-4D3F-9187-1A777D9CBBE9}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{511E3E33-1B1C-4D3F-9187-1A777D9CBBE9}.Release|iPhone.ActiveCfg = Release|Any CPU
 		{511E3E33-1B1C-4D3F-9187-1A777D9CBBE9}.Release|iPhone.Build.0 = Release|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{B01A415A-997F-42B3-883A-994A4468B605}.Release|iPhone.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

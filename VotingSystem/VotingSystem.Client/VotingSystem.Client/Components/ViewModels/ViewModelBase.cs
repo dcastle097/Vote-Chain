@@ -5,14 +5,14 @@ namespace VotingSystem.Client.Components.ViewModels
 {
     public class ViewModelBase : BindableBase, INavigatedAware, IDestructible
     {
-        private string _title;
         private bool _isBusy;
+        private string _title;
 
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
         }
-        
+
         public bool IsBusy
         {
             get => _isBusy;
@@ -25,7 +25,7 @@ namespace VotingSystem.Client.Components.ViewModels
             set => SetProperty(ref _title, value);
         }
 
-        public INavigationService NavigationService { get; }
+        protected INavigationService NavigationService { get; }
 
         public void Destroy()
         {

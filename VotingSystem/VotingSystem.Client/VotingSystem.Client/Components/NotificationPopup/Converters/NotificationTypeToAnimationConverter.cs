@@ -9,7 +9,7 @@ namespace VotingSystem.Client.Components.NotificationPopup.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var type = (NotificationType) value;
+            var type = (NotificationType)value;
             switch (type)
             {
                 case NotificationType.Success:

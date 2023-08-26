@@ -5,8 +5,8 @@
 }
 
 <div class="row pt-3">
-        <h3>Votantes</h3>
-    </div>
+    <h3>Votantes</h3>
+</div>
 
 <div class="row">
     <p>
@@ -35,23 +35,32 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var voter in Model.Data)
+            @if (Model.Data != null)
+            {
+                @foreach (var voter in Model.Data)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => voter.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voter.Department)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voter.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => voter.IsActive)
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => voter.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => voter.Department)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => voter.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => voter.IsActive)
-                    </td>
-                    <td>
-                    </td>
+                    <td colspan="5">No hay votantes registrados</td>
                 </tr>
             }
             </tbody>

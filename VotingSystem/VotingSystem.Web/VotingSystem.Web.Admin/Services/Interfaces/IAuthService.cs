@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 
-namespace VotingSystem.Web.Admin.Services.Interfaces
+namespace VotingSystem.Web.Admin.Services.Interfaces;
+
+public interface IAuthService
 {
-    public interface IAuthService
-    {
-        Task<bool> LoginAsync(string email, string password);
-        Task LogoutAsync();
-    }
+    Task<bool> LoginAsync(string email, string password);
+    Task LogoutAsync();
 }

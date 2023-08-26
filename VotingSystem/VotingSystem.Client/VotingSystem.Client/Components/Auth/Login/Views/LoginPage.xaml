@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:viewModels="clr-namespace:VotingSystem.Client.Components.Auth.Login.ViewModels;assembly=VotingSystem.Client"
+             xmlns:enhancedEntry="clr-namespace:LeoJHarris.FormsPlugin.Abstractions;assembly=LeoJHarris.FormsPlugin.Abstractions"
+             x:Class="VotingSystem.Client.Components.Auth.Login.Views.LoginPage"
+             x:DataType="viewModels:LoginViewModel"
+             Title="{Binding Title}"
+             ios:Page.UseSafeArea="true">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout VerticalOptions="CenterAndExpand">
+                <enhancedEntry:EnhancedEntry x:Name="PasswordEntry"
+                                             Text="{Binding Password}"
+                                             IsPassword="True"
+                                             BorderWidth="1"
+                                             Placeholder="Contraseña"
+                                             ReturnKeyType="Next" />
+            </StackLayout>
+            <Button
+                Text="Iniciar Sesión"
+                VerticalOptions="End"
+                Command="{Binding LoginCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

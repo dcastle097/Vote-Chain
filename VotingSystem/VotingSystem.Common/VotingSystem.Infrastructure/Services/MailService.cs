@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -45,7 +44,7 @@ namespace VotingSystem.Infrastructure.Services
             mailMessage.To.Add(new MailboxAddress(recipient.name, recipient.email));
             mailMessage.Subject = title;
 
-            var bodyBuilder = new BodyBuilder {HtmlBody = body};
+            var bodyBuilder = new BodyBuilder { HtmlBody = body };
 
             if (_options.SocketOptions.Equals("starttls", StringComparison.InvariantCultureIgnoreCase))
                 await _client.ConnectAsync(_options.Host, _options.Port, SecureSocketOptions.StartTls);
@@ -54,11 +53,9 @@ namespace VotingSystem.Infrastructure.Services
                 await _client.ConnectAsync(_options.Host, _options.Port, true);
 
             if (attachments != null)
-            {
                 foreach (var (name, stream) in attachments)
                     bodyBuilder.Attachments.Add(name, stream);
-            }
-            
+
             _client.AuthenticationMechanisms.Remove("XOAUTH2");
             await _client.AuthenticateAsync(_options.Address, _options.Password);
 

@@ -12,7 +12,7 @@ contract Registration {
         string department;
         string city;
         string locality;
-        address[] polls; // list of assocciated poll addresses
+        address[] polls; // list of associated poll addresses
     }
 
     struct Poll {
@@ -25,6 +25,9 @@ contract Registration {
     struct PollDto {
         address id;
         string name;
+        uint256 startDate;
+        uint256 endDate;
+        bool voted;
     }
 
     address owner;
@@ -146,7 +149,10 @@ contract Registration {
         for (uint256 i = 0; i < voters[voter].polls.length; i++) {
             _polls[j] = PollDto({
                 id: voters[voter].polls[i],
-                name: polls[voters[voter].polls[i]].title
+                name: polls[voters[voter].polls[i]].title,
+                startDate: polls[voters[voter].polls[i]].startDate,
+                endDate: polls[voters[voter].polls[i]].endDate,
+                voted: voterVoted[voter][voters[voter].polls[i]]
             });
             j += 1;
         }

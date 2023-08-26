@@ -3,8 +3,14 @@ using System.Threading.Tasks;
 using Prism;
 using Prism.Ioc;
 using Prism.Plugin.Popups;
+using VotingSystem.Client.Components.ActivityPopup.Views;
+using VotingSystem.Client.Components.Auth.Login.ViewModels;
+using VotingSystem.Client.Components.Auth.Login.Views;
 using VotingSystem.Client.Components.Auth.QrScanner.ViewModels;
 using VotingSystem.Client.Components.Auth.QrScanner.Views;
+using VotingSystem.Client.Components.Auth.Register.ViewModels;
+using VotingSystem.Client.Components.Auth.Register.Views;
+using VotingSystem.Client.Components.Auth.Repositories;
 using VotingSystem.Client.Components.MainPage.ViewModels;
 using VotingSystem.Client.Components.MainPage.Views;
 using VotingSystem.Client.Components.NotificationPopup.ViewModels;
@@ -34,25 +40,47 @@ namespace VotingSystem.Client
             containerRegistry.RegisterPopupNavigationService();
             containerRegistry.RegisterPopupDialogService();
             containerRegistry.RegisterForNavigation<NavigationPage>();
+
+            #region AuthPages
+
             containerRegistry
                 .RegisterForNavigation<MainPage,
                     MainViewModel>();
             containerRegistry
                 .RegisterForNavigation<QrScannerPage,
                     QrScannerViewModel>();
+            containerRegistry.RegisterForNavigation<LoginPage, LoginViewModel>();
+            containerRegistry.RegisterForNavigation<RegisterPage, RegisterViewModel>();
 
-            // Polls
+            #endregion
+
+            #region PollPages
+
             containerRegistry
                 .RegisterForNavigation<PollsListPage,
                     PollsListViewModel>();
             containerRegistry
                 .RegisterForNavigation<PollsVotePage,
                     PollsVoteViewModel>();
+
+            #endregion
+
+            #region Popups
+            
+            containerRegistry
+                .RegisterForNavigation<ActivityPopup>();
             containerRegistry
                 .RegisterForNavigation<NotificationPopupPage,
                     NotificationPopupViewModel>();
 
-            containerRegistry.Register<IPollsListRepository, TestPollsListRepository>();
+            #endregion
+
+            #region Repositories
+
+            containerRegistry.Register<IAuthRepository, AuthRepository>();
+            containerRegistry.Register<IPollsRepository, PollsRepository>();
+
+            #endregion
         }
 
         protected override async void OnInitialized()
@@ -62,7 +90,7 @@ namespace VotingSystem.Client
                 TaskScheduler.UnobservedTaskException += (sender, e) => { Console.WriteLine(e.Exception.ToString()); };
                 InitializeComponent();
                 SvgImageSource.RegisterAssembly();
-                await NavigationService.NavigateAsync("NavigationPage/MainPage");
+                await NavigationService.NavigateAsync($"app:///NavigationPage/{nameof(MainPage)}");
             }
             catch (Exception e)
             {

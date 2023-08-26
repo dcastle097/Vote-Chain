@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Navigation;
+using VotingSystem.Client.Components.Auth.QrScanner.Views;
 using VotingSystem.Client.Components.ViewModels;
 
 namespace VotingSystem.Client.Components.MainPage.ViewModels
@@ -8,23 +10,24 @@ namespace VotingSystem.Client.Components.MainPage.ViewModels
     {
         public MainViewModel(INavigationService navigationService) : base(navigationService)
         {
-            GoToPollsCommand = new DelegateCommand(GoToPolls);
-            GoToScannerCommand = new DelegateCommand(GoToScanner);
+            LoginCommand = new DelegateCommand(GoToLogin);
+            RegisterCommand = new DelegateCommand(GoToRegistration);
         }
 
-        public DelegateCommand GoToPollsCommand { get; set; }
+        public DelegateCommand LoginCommand { get; set; }
 
-        public DelegateCommand GoToScannerCommand { get; set; }
+        public DelegateCommand RegisterCommand { get; set; }
 
-        private void GoToScanner()
+        private void GoToRegistration()
         {
-            NavigationService.NavigateAsync("QrScannerPage",
-                new NavigationParameters {{"action", "completeRegistration"}});
+            NavigationService.NavigateAsync(nameof(QrScannerPage),
+                new NavigationParameters { { "action", "completeRegistration" } });
         }
 
-        private void GoToPolls()
+        private void GoToLogin()
         {
-            NavigationService.NavigateAsync("app:///NavigationPage/PollsListPage");
+            NavigationService.NavigateAsync(nameof(QrScannerPage),
+                new NavigationParameters { { "action", "login" } });
         }
     }
 }

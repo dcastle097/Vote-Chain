@@ -8,14 +8,14 @@ namespace VotingSystem.Client.Components.NotificationPopup.ViewModels
     {
         private NotificationDetails _details;
 
+        public NotificationPopupViewModel(INavigationService navigationService) : base(navigationService)
+        {
+        }
+
         public NotificationDetails Details
         {
             get => _details;
             set => SetProperty(ref _details, value);
-        }
-
-        public NotificationPopupViewModel(INavigationService navigationService) : base(navigationService)
-        {
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)

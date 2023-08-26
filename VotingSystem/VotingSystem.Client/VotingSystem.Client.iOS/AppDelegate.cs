@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using LeoJHarris.FormsPlugin.iOS;
 using Prism;
 using Prism.Ioc;
 using Rg.Plugins.Popup;
@@ -6,6 +7,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms.Svg.iOS;
+using Platform = ZXing.Net.Mobile.Forms.iOS.Platform;
 
 namespace VotingSystem.Client.iOS
 {
@@ -27,7 +29,8 @@ namespace VotingSystem.Client.iOS
             Forms.Init();
             SvgImage.Init();
             Popup.Init();
-            ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+            Platform.Init();
+            EnhancedEntryRenderer.Init();
 
             LoadApplication(new App(new iOSInitializer()));
 

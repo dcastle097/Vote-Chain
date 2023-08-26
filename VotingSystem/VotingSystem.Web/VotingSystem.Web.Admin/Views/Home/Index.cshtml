@@ -1,11 +1,11 @@
-﻿@model VotingSystem.Domain.DTOs.Requests.LoginRequestDto
+﻿@model LoginRequestDto
 
 @{
     ViewData["Title"] = "Home Page";
     var returnUrl = string.Empty;
-    if(!string.IsNullOrWhiteSpace(Context.Request.Query["ReturnUrl"]))
+    if (!string.IsNullOrWhiteSpace(Context.Request.Query["ReturnUrl"]))
         returnUrl = Context.Request.Query["ReturnUrl"];
-    if(!string.IsNullOrWhiteSpace(ViewBag.ReturnUrl))
+    if (!string.IsNullOrWhiteSpace(ViewBag.ReturnUrl))
         returnUrl = ViewBag.ReturnUrl;
 }
 

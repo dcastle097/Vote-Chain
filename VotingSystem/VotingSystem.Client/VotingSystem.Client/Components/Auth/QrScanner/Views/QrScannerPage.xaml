@@ -19,8 +19,7 @@
                                     IsScanning="{Binding IsScanning}"
                                     IsAnalyzing="{Binding IsAnalyzing}"
                                     Result="{Binding Result, Mode=TwoWay}"
-                                    ScanResultCommand="{Binding QrScanResultCommand}"
-                                     />
+                                    ScanResultCommand="{Binding QrScanResultCommand}" />
             <zxing:ZXingDefaultOverlay TopText="Apunta tu camara al código QR"
                                        BottomText="El escaneo se completará automaticamente" ShowFlashButton="false"
                                        Opacity="0.9" />

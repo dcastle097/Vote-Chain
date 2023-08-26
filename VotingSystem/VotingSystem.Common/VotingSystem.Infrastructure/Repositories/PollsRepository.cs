@@ -22,7 +22,7 @@ namespace VotingSystem.Infrastructure.Repositories
         {
             var basicAwsCredentials = new BasicAWSCredentials(configuration.Value.DynamoDb.AccessKey,
                 configuration.Value.DynamoDb.SecretKey);
-            var amazonDynamoDbConfig = new AmazonDynamoDBConfig {RegionEndpoint = RegionEndpoint.USEast2};
+            var amazonDynamoDbConfig = new AmazonDynamoDBConfig { RegionEndpoint = RegionEndpoint.USEast2 };
             var amazonDynamoDbClient = new AmazonDynamoDBClient(basicAwsCredentials, amazonDynamoDbConfig);
 
             _context = new DynamoDBContext(amazonDynamoDbClient);
@@ -41,8 +41,8 @@ namespace VotingSystem.Infrastructure.Repositories
                     Created = d["Created"].AsDateTime(),
                     Id = d["Id"].AsString() ?? string.Empty,
                     Title = d["Title"] ?? string.Empty,
-                    StartDate = d["StartDate"].AsDateTime(),
-                    EndDate = d["EndDate"].AsDateTime(),
+                    StartDate = d["StartDate"].AsDateTime().ToUniversalTime(),
+                    EndDate = d["EndDate"].AsDateTime().ToUniversalTime(),
                     Statement = d["Statement"].AsString() ?? string.Empty,
                     Options = d.Keys.Contains("Options") ? d["Options"]?.AsListOfString() : new List<string>()
                 });
@@ -58,7 +58,16 @@ namespace VotingSystem.Infrastructure.Repositories
         /// <inheritdoc />
         public async Task<Poll> GetByIdAsync(string id)
         {
-            return await _context.LoadAsync<Poll>(id);
+            var poll = await _context.LoadAsync<Poll>(id);
+            return new Poll
+            {
+                Id = poll.Id,
+                Title = poll.Title,
+                Statement = poll.Statement,
+                StartDate = poll.StartDate.ToUniversalTime(),
+                EndDate = poll.EndDate.ToUniversalTime(),
+                Options = poll.Options
+            };
         }
 
         /// <inheritdoc />
